@@ -1,0 +1,975 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>XX心理测量</title>
+    <style>
+        :root {
+            --primary-color: #5e548e;
+            --secondary-color: #9f86c0;
+            --background-color: #f9f7fe;
+            --text-color: #2d2b38;
+            --card-bg: #fff;
+            --shadow: 0 4px 15px rgba(0,0,0,0.08);
+            --selected-bg: #e0d8f0;
+        }
+        
+        body {
+            font-family: 'PingFang SC', 'Microsoft YaHei', sans-serif;
+            background-color: var(--background-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 0;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            text-align: center;
+            padding: 20px 0;
+            margin-bottom: 20px;
+        }
+        
+        h1 {
+            color: var(--primary-color);
+            font-size: 1.8rem;
+            margin-bottom: 10px;
+        }
+        
+        .intro {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+        
+        .card {
+            background-color: var(--card-bg);
+            border-radius: 16px;
+            box-shadow: var(--shadow);
+            padding: 25px;
+            margin-bottom: 25px;
+            transition: transform 0.3s ease;
+        }
+        
+        .question-card {
+            transition: transform 0.3s ease, opacity 0.3s ease;
+        }
+        
+        .card:hover {
+            transform: translateY(-3px);
+        }
+        
+        .question {
+            margin-bottom: 30px;
+        }
+        
+        .question p {
+            font-size: 1.05rem;
+            margin-bottom: 15px;
+            font-weight: 500;
+        }
+        
+        .options {
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 12px;
+        }
+        
+        .option {
+            flex: 1;
+            text-align: center;
+            padding: 10px 5px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            min-width: 60px;
+            font-size: 0.9rem;
+        }
+        
+        .option:hover {
+            background-color: #f0e6ff;
+            border-color: var(--secondary-color);
+        }
+        
+        .option.selected {
+            background-color: var(--selected-bg);
+            color: var(--primary-color);
+            border-color: var(--primary-color);
+            font-weight: bold;
+        }
+        
+        .navigation {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 30px;
+        }
+        
+        button {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 500;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+        }
+        
+        button:hover {
+            background-color: var(--secondary-color);
+            transform: translateY(-2px);
+        }
+        
+        button:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        .progress-container {
+            width: 100%;
+            background-color: #eee;
+            height: 8px;
+            border-radius: 4px;
+            margin: 20px 0;
+            overflow: hidden;
+        }
+        
+        .progress-bar {
+            height: 100%;
+            background-color: var(--secondary-color);
+            width: 0;
+            transition: width 0.3s ease;
+        }
+        
+        .result-container {
+            text-align: center;
+        }
+        
+        .animal-image {
+            width: 180px;
+            height: 180px;
+            margin: 0 auto 20px;
+            border-radius: 50%;
+            overflow: hidden;
+            background-color: #f0e6ff;
+            box-shadow: 0 4px 15px rgba(94, 84, 142, 0.2);
+        }
+        
+        .animal-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .title {
+            font-size: 1.8rem;
+            color: var(--primary-color);
+            margin-bottom: 15px;
+        }
+        
+        .description {
+            margin-bottom: 25px;
+            line-height: 1.7;
+        }
+        
+        .score-breakdown {
+            background-color: #f0e6ff;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 20px 0;
+            text-align: left;
+        }
+        
+        .hidden {
+            display: none;
+        }
+        
+        .fade-out {
+            opacity: 0;
+            transform: translateY(10px);
+        }
+        
+        .fade-in {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        footer {
+            text-align: center;
+            padding: 20px 0;
+            color: #666;
+            font-size: 0.9rem;
+        }
+        
+        .qr-code {
+            text-align: center;
+            margin: 20px 0;
+        }
+        
+        .share-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin: 20px 0;
+        }
+        
+        .share-btn {
+            padding: 10px 15px;
+            border-radius: 5px;
+            font-size: 0.9rem;
+        }
+        
+        .instructions {
+            background-color: #f0e6ff;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 20px 0;
+            font-size: 0.95rem;
+        }
+        
+        .result-item {
+            margin-bottom: 10px;
+        }
+        
+        @media (max-width: 600px) {
+            .container {
+                padding: 15px;
+            }
+            
+            h1 {
+                font-size: 1.5rem;
+            }
+            
+            .card {
+                padding: 20px;
+            }
+            
+            .options {
+                flex-direction: column;
+            }
+            
+            .option {
+                flex: auto;
+                margin-bottom: 8px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>XX心理特质测量</h1>
+        </header>
+        
+        <div class="intro card">
+            <h2>欢迎参与心理测量</h2>
+            <p>本测量名称暂时保密</p>
+            <p>测量过程完全匿名。完成后，您将获得个性化的称号和动物形象。</p>
+            <div class="instructions">
+                <p><strong>填写说明：</strong></p>
+                <p>下面有一些关于个人特点或特质的句子，请阅读每个条目，决定您同意或不同意的程度：</p>
+                <p>如果您非常不同意，圈1；如果您不同意，圈2；如果您有点不同意，圈3；</p>
+                <p>如果您感到中立或无法确定，中间的数字是4；</p>
+                <p>如果您有点同意，圈5；如果您不同意，圈6；如果您非常同意，圈7；</p>
+                <p>哈吉马路哟</p>
+            </div>
+            <button id="start-btn">开始测量</button>
+        </div>
+        
+        <div id="quiz-container" class="hidden">
+            <div class="progress-container">
+                <div id="progress-bar" class="progress-bar"></div>
+            </div>
+            
+            <div id="question-container" class="card question-card">
+                <!-- 问题将通过JavaScript动态加载 -->
+            </div>
+            
+            <div class="navigation">
+                <button id="prev-btn" disabled>上一题</button>
+                <div id="question-counter">问题 1/18</div>
+                <button id="next-btn">下一题</button>
+            </div>
+        </div>
+        
+        <div id="result-container" class="card result-container hidden">
+            <h2>您的测量结果</h2>
+            <div id="animal-image" class="animal-image">
+                <!-- 动物图像将在这里显示 -->
+            </div>
+            <div id="result-title" class="title">
+                <!-- 称号将在这里显示 -->
+            </div>
+            <div id="result-description" class="description">
+                <!-- 描述将在这里显示 -->
+            </div>
+            
+            <div class="score-breakdown">
+                <h3>详细分析</h3>
+                <div id="score-details">
+                    <!-- 分数详情将在这里显示 -->
+                </div>
+            </div>
+            
+            <div class="share-buttons">
+                <button id="restart-btn" class="share-btn">重新测量</button>
+                <button id="share-btn" class="share-btn">分享结果</button>
+            </div>
+            
+            <div class="qr-code">
+                <p>扫描二维码分享给朋友</p>
+                <div id="qr-code-image">
+                    <!-- 二维码将在这里生成 -->
+                </div>
+            </div>
+        </div>
+        
+        <footer>
+            <p>© 2025 XX心理测量. 自娱自乐版.</p>
+        </footer>
+    </div>
+
+    <script>
+        // 量表问题数据
+        const questions = [
+            {
+                id: 1,
+                text: "得到想要的东西才使我感到满意。",
+                options: [
+                    { value: 1, text: "非常不同意" },
+                    { value: 2, text: "不同意" },
+                    { value: 3, text: "有点不同意" },
+                    { value: 4, text: "中立" },
+                    { value: 5, text: "有点同意" },
+                    { value: 6, text: "同意" },
+                    { value: 7, text: "非常同意" }
+                ]
+            },
+            {
+                id: 2,
+                text: "我感到满足是因为自己的要求不高。",
+                options: [
+                    { value: 1, text: "非常不同意" },
+                    { value: 2, text: "不同意" },
+                    { value: 3, text: "有点不同意" },
+                    { value: 4, text: "中立" },
+                    { value: 5, text: "有点同意" },
+                    { value: 6, text: "同意" },
+                    { value: 7, text: "非常同意" }
+                ]
+            },
+            {
+                id: 3,
+                text: "我试图降低要求来保持满足状态。",
+                options: [
+                    { value: 1, text: "非常不同意" },
+                    { value: 2, text: "不同意" },
+                    { value: 3, text: "有点不同意" },
+                    { value: 4, text: "中立" },
+                    { value: 5, text: "有点同意" },
+                    { value: 6, text: "同意" },
+                    { value: 7, text: "非常同意" }
+                ]
+            },
+            {
+                id: 4,
+                text: "即使失败时，我也不放弃高目标。",
+                options: [
+                    { value: 1, text: "非常不同意" },
+                    { value: 2, text: "不同意" },
+                    { value: 3, text: "有点不同意" },
+                    { value: 4, text: "中立" },
+                    { value: 5, text: "有点同意" },
+                    { value: 6, text: "同意" },
+                    { value: 7, text: "非常同意" }
+                ]
+            },
+            {
+                id: 5,
+                text: "我试图在人生的各个方面实现自己的目标。",
+                options: [
+                    { value: 1, text: "非常不同意" },
+                    { value: 2, text: "不同意" },
+                    { value: 3, text: "有点不同意" },
+                    { value: 4, text: "中立" },
+                    { value: 5, text: "有点同意" },
+                    { value: 6, text: "同意" },
+                    { value: 7, text: "非常同意" }
+                ]
+            },
+            {
+                id: 6,
+                text: "不能实现目标使我痛苦。",
+                options: [
+                    { value: 1, text: "非常不同意" },
+                    { value: 2, text: "不同意" },
+                    { value: 3, text: "有点不同意" },
+                    { value: 4, text: "中立" },
+                    { value: 5, text: "有点同意" },
+                    { value: 6, text: "同意" },
+                    { value: 7, text: "非常同意" }
+                ]
+            },
+            {
+                id: 7,
+                text: "我认为强烈的追求欲使生活变得有意义。",
+                options: [
+                    { value: 1, text: "非常不同意" },
+                    { value: 2, text: "不同意" },
+                    { value: 3, text: "有点不同意" },
+                    { value: 4, text: "中立" },
+                    { value: 5, text: "有点同意" },
+                    { value: 6, text: "同意" },
+                    { value: 7, text: "非常同意" }
+                ]
+            },
+            {
+                id: 8,
+                text: "我因为要求不高而生活得快乐。",
+                options: [
+                    { value: 1, text: "非常不同意" },
+                    { value: 2, text: "不同意" },
+                    { value: 3, text: "有点不同意" },
+                    { value: 4, text: "中立" },
+                    { value: 5, text: "有点同意" },
+                    { value: 6, text: "同意" },
+                    { value: 7, text: "非常同意" }
+                ]
+            },
+            {
+                id: 9,
+                text: "失败使我苦恼，成功使我快乐。",
+                options: [
+                    { value: 1, text: "非常不同意" },
+                    { value: 2, text: "不同意" },
+                    { value: 3, text: "有点不同意" },
+                    { value: 4, text: "中立" },
+                    { value: 5, text: "有点同意" },
+                    { value: 6, text: "同意" },
+                    { value: 7, text: "非常同意" }
+                ]
+            },
+            {
+                id: 10,
+                text: "我会尽力排除一切干扰追求目标。",
+                options: [
+                    { value: 1, text: "非常不同意" },
+                    { value: 2, text: "不同意" },
+                    { value: 3, text: "有点不同意" },
+                    { value: 4, text: "中立" },
+                    { value: 5, text: "有点同意" },
+                    { value: 6, text: "同意" },
+                    { value: 7, text: "非常同意" }
+                ]
+            },
+            {
+                id: 11,
+                text: "知难而上使我感到快乐。",
+                options: [
+                    { value: 1, text: "非常不同意" },
+                    { value: 2, text: "不同意" },
+                    { value: 3, text: "有点不同意" },
+                    { value: 4, text: "中立" },
+                    { value: 5, text: "有点同意" },
+                    { value: 6, text: "同意" },
+                    { value: 7, text: "非常同意" }
+                ]
+            },
+            {
+                id: 12,
+                text: "部分目标没有实现常令我感到不快。",
+                options: [
+                    { value: 1, text: "非常不同意" },
+                    { value: 2, text: "不同意" },
+                    { value: 3, text: "有点不同意" },
+                    { value: 4, text: "中立" },
+                    { value: 5, text: "有点同意" },
+                    { value: 6, text: "同意" },
+                    { value: 7, text: "非常同意" }
+                ]
+            },
+            {
+                id: 13,
+                text: "我并不会因为进步不大而不快乐。",
+                options: [
+                    { value: 1, text: "非常不同意" },
+                    { value: 2, text: "不同意" },
+                    { value: 3, text: "有点不同意" },
+                    { value: 4, text: "中立" },
+                    { value: 5, text: "有点同意" },
+                    { value: 6, text: "同意" },
+                    { value: 7, text: "非常同意" }
+                ]
+            },
+            {
+                id: 14,
+                text: "我不强求成功。",
+                options: [
+                    { value: 1, text: "非常不同意" },
+                    { value: 2, text: "不同意" },
+                    { value: 3, text: "有点不同意" },
+                    { value: 4, text: "中立" },
+                    { value: 5, text: "有点同意" },
+                    { value: 6, text: "同意" },
+                    { value: 7, text: "非常同意" }
+                ]
+            },
+            {
+                id: 15,
+                text: "我能平静地对待成败得失。",
+                options: [
+                    { value: 1, text: "非常不同意" },
+                    { value: 2, text: "不同意" },
+                    { value: 3, text: "有点不同意" },
+                    { value: 4, text: "中立" },
+                    { value: 5, text: "有点同意" },
+                    { value: 6, text: "同意" },
+                    { value: 7, text: "非常同意" }
+                ]
+            },
+            {
+                id: 16,
+                text: "我不刻意追求目标。",
+                options: [
+                    { value: 1, text: "非常不同意" },
+                    { value: 2, text: "不同意" },
+                    { value: 3, text: "有点不同意" },
+                    { value: 4, text: "中立" },
+                    { value: 5, text: "有点同意" },
+                    { value: 6, text: "同意" },
+                    { value: 7, text: "非常同意" }
+                ]
+            },
+            {
+                id: 17,
+                text: "我会坚持不懈地追求目标。",
+                options: [
+                    { value: 1, text: "非常不同意" },
+                    { value: 2, text: "不同意" },
+                    { value: 3, text: "有点不同意" },
+                    { value: 4, text: "中立" },
+                    { value: 5, text: "有点同意" },
+                    { value: 6, text: "同意" },
+                    { value: 7, text: "非常同意" }
+                ]
+            },
+            {
+                id: 18,
+                text: "我不会因为不突出而感到不快。",
+                options: [
+                    { value: 1, text: "非常不同意" },
+                    { value: 2, text: "不同意" },
+                    { value: 3, text: "有点不同意" },
+                    { value: 4, text: "中立" },
+                    { value: 5, text: "有点同意" },
+                    { value: 6, text: "同意" },
+                    { value: 7, text: "非常同意" }
+                ]
+            }
+        ];
+        
+        // 结果类型定义
+        const resultTypes = [
+            {
+                type: "平衡型追求者",
+                image: "/C:/Windows/system32/config/systemprofile/images/blue.png", // 蓝色鸟类图像
+                title: "智慧之鹰",
+                description: "您在目标追求中展现出平衡的特质，既能积极追求目标，也懂得适时调整心态。您善于在入世追求与出世心态之间找到平衡点，既不失进取心，又能保持内心的平静。这种平衡使您在面对成功与失败时都能以更加理性和从容的态度应对，让生活既有动力又不失宁静。",
+                minEngage: 35,
+                maxEngage: 65,
+                minDetach: 35,
+                maxDetach: 65
+            },
+            {
+                type: "热情型追求者",
+                image: "/C:/Windows/system32/config/systemprofile/images/red.png", // 红色狮子图像
+                title: "热血雄狮",
+                description: "您在目标追求上展现出极强的入世性，是一位充满激情的追求者。您渴望成功，勇于面对挑战，不惧失败。您相信努力会带来回报，目标的实现对您而言极为重要。您的生活充满活力和目标感，但有时也可能因为过于专注于目标而忽略了放松和接纳。适当培养一些出世的心态，可以让您在追求过程中更加从容。",
+                minEngage: 65,
+                maxEngage: 100,
+                minDetach: 0,
+                maxDetach: 50
+            },
+            {
+                type: "超然型追求者",
+                image: "/C:/Windows/system32/config/systemprofile/images/green.png", // 绿色乌龟图像
+                title: "智慧之龟",
+                description: "您在目标追求上展现出较高的出世性，是一位懂得放下的智者。您重视内心的平静与满足，不过分执着于外在目标的实现。您善于调整期望，懂得知足常乐的道理。在面对成败得失时，您能保持平静的心态，不为外物所扰。您的这种特质让您在纷扰的世界中保持内心的一片净土，但有时也可能因此错过一些通过努力能够实现的目标。",
+                minEngage: 0,
+                maxEngage: 50,
+                minDetach: 65,
+                maxDetach: 100
+            },
+            {
+                type: "矛盾型追求者",
+                image: "/C:/Windows/system32/config/systemprofile/images/yellow.png", // 黄色猫图像
+                title: "思考之猫",
+                description: "您在目标追求上既有较高的入世性，又有较高的出世性，呈现出一种矛盾的状态。一方面，您渴望实现目标，追求成功；另一方面，您又试图降低期望，保持心态平和。这种矛盾可能使您在追求过程中经历更多的内心冲突，但也赋予您更加丰富和深刻的体验。学会在不同情境中灵活运用这两种特质，可能是您需要探索的方向。",
+                minEngage: 50,
+                maxEngage: 100,
+                minDetach: 50,
+                maxDetach: 100
+            },
+            {
+                type: "淡泊型追求者",
+                image: "/C:/Windows/system32/config/systemprofile/images/gray.png", // 灰色兔子图像
+                title: "平静之兔",
+                description: "您在目标追求上既不强调入世的成就感，也不特别注重出世的放下，呈现出一种较为淡泊的特质。您可能不会为目标的实现或未实现而过度情绪化，保持着一种平和但略显疏离的态度。这种特质让您在面对生活各种挑战时都能保持一定的从容，但也可能使您错过一些通过积极追求或主动调整能带来的成长和满足。",
+                minEngage: 0,
+                maxEngage: 35,
+                minDetach: 0,
+                maxDetach: 35
+            }
+        ];
+        
+        // 全局变量
+        let currentQuestionIndex = 0;
+        let answers = {};
+        
+        // DOM元素
+        const startBtn = document.getElementById('start-btn');
+        const quizContainer = document.getElementById('quiz-container');
+        const questionContainer = document.getElementById('question-container');
+        const prevBtn = document.getElementById('prev-btn');
+        const nextBtn = document.getElementById('next-btn');
+        const progressBar = document.getElementById('progress-bar');
+        const questionCounter = document.getElementById('question-counter');
+        const resultContainer = document.getElementById('result-container');
+        const animalImage = document.getElementById('animal-image');
+        const resultTitle = document.getElementById('result-title');
+        const resultDescription = document.getElementById('result-description');
+        const scoreDetails = document.getElementById('score-details');
+        const restartBtn = document.getElementById('restart-btn');
+        const shareBtn = document.getElementById('share-btn');
+        const qrCodeImage = document.getElementById('qr-code-image');
+        const introCard = document.querySelector('.intro');
+        
+        // 事件监听器
+        startBtn.addEventListener('click', startQuiz);
+        prevBtn.addEventListener('click', showPreviousQuestion);
+        nextBtn.addEventListener('click', handleNextButton);
+        restartBtn.addEventListener('click', restartQuiz);
+        shareBtn.addEventListener('click', shareResult);
+        
+        // 开始测验
+        function startQuiz() {
+            introCard.classList.add('hidden');
+            quizContainer.classList.remove('hidden');
+            showQuestion(currentQuestionIndex);
+            updateProgressBar();
+        }
+        
+        // 显示问题
+        function showQuestion(index) {
+            // 更新按钮状态
+            prevBtn.disabled = index === 0;
+            nextBtn.textContent = index === questions.length - 1 ? '查看结果' : '下一题';
+            
+            // 获取当前问题
+            const question = questions[index];
+            
+            // 更新问题计数器
+            questionCounter.textContent = `问题 ${index + 1}/${questions.length}`;
+            
+            // 创建问题HTML
+            let questionHTML = `
+                <div class="question">
+                    <p>${index + 1}. ${question.text}</p>
+                    <div class="options">
+            `;
+            
+            // 添加选项
+            question.options.forEach(option => {
+                const isSelected = answers[question.id] === option.value;
+                questionHTML += `
+                    <div class="option ${isSelected ? 'selected' : ''}" data-option-value="${option.value}">
+                        ${option.text}
+                    </div>
+                `;
+            });
+            
+            questionHTML += `
+                    </div>
+                </div>
+            `;
+            
+            // 添加淡入淡出效果
+            questionContainer.classList.add('fade-out');
+            
+            setTimeout(() => {
+                // 更新问题容器
+                questionContainer.innerHTML = questionHTML;
+                
+                // 为选项添加事件监听器
+                document.querySelectorAll('.option').forEach(option => {
+                    option.addEventListener('click', selectOption);
+                });
+                
+                // 淡入新问题
+                questionContainer.classList.remove('fade-out');
+                questionContainer.classList.add('fade-in');
+            }, 300);
+        }
+        
+        // 更新进度条
+        function updateProgressBar() {
+            const progress = ((currentQuestionIndex + 1) / questions.length) * 100;
+            progressBar.style.width = `${progress}%`;
+        }
+        
+        // 选择选项
+        function selectOption(e) {
+            const selectedOption = e.currentTarget;
+            const optionValue = parseInt(selectedOption.getAttribute('data-option-value'));
+            const questionId = questions[currentQuestionIndex].id;
+            
+            // 保存答案
+            answers[questionId] = optionValue;
+            
+            // 更新UI
+            document.querySelectorAll('.option').forEach(option => {
+                option.classList.remove('selected');
+            });
+            selectedOption.classList.add('selected');
+        }
+        
+        // 显示上一题
+        function showPreviousQuestion() {
+            if (currentQuestionIndex > 0) {
+                currentQuestionIndex--;
+                showQuestion(currentQuestionIndex);
+                updateProgressBar();
+            }
+        }
+        
+        // 处理下一步按钮
+        function handleNextButton() {
+            const currentQuestion = questions[currentQuestionIndex];
+            
+            // 检查是否已选择答案
+            if (!answers[currentQuestion.id]) {
+                alert('请选择一个选项再继续');
+                return;
+            }
+            
+            // 如果是最后一道题，显示结果
+            if (currentQuestionIndex === questions.length - 1) {
+                showResults();
+            } else {
+                // 否则显示下一题
+                currentQuestionIndex++;
+                showQuestion(currentQuestionIndex);
+                updateProgressBar();
+            }
+        }
+        
+        // 计算量表得分
+        function calculateScores() {
+            // 拼搏精神: 4, 5, 7, 10, 11, 17
+            // 在乎结果: 1, 6, 9, 2
+            // 平常心: 13, 14, 15, 16, 18
+            // 低要求: 2, 3, 8
+            // 入世性得分题目: 1, 4, 5, 6, 7, 9, 10, 11, 12, 17
+            // 出世性得分题目: 2, 3, 8, 13, 14, 15, 16, 18
+            
+            let engagementScore = 0;
+            let detachmentScore = 0;
+
+            // 入世性得分
+            const engagementItems = [1, 4, 5, 6, 7, 9, 10, 11, 12, 17];
+            engagementItems.forEach(itemId => {
+                if (answers[itemId]) {
+                    engagementScore += answers[itemId];
+                }
+            });
+            
+            // 出世性得分
+            const detachmentItems = [2, 3, 8, 13, 14, 15, 16, 18];
+            detachmentItems.forEach(itemId => {
+                if (answers[itemId]) {
+                    detachmentScore += answers[itemId];
+                }
+            });
+            
+            // 将得分转换为百分比
+            const engagementPercent = (engagementScore / (engagementItems.length * 7)) * 100;
+            const detachmentPercent = (detachmentScore / (detachmentItems.length * 7)) * 100;
+            
+            return {
+                rawEngagement: engagementScore,
+                rawDetachment: detachmentScore,
+                engagementPercent: engagementPercent,
+                detachmentPercent: detachmentPercent,
+                maxPossibleEngagement: engagementItems.length * 7,
+                maxPossibleDetachment: detachmentItems.length * 7
+            };
+        }
+        
+        // 判断结果类型
+        function determineResultType(scores) {
+            // 根据入世和出世的分数百分比来判断类型
+            const { engagementPercent, detachmentPercent } = scores;
+            
+            // 找到匹配的结果类型
+            for (const resultType of resultTypes) {
+                if (engagementPercent >= resultType.minEngage && 
+                    engagementPercent <= resultType.maxEngage && 
+                    detachmentPercent >= resultType.minDetach && 
+                    detachmentPercent <= resultType.maxDetach) {
+                    return resultType;
+                }
+            }
+            
+            // 如果没有完全匹配，返回最接近的类型（平衡型）
+            return resultTypes[0];
+        }
+        
+        // 显示结果
+        function showResults() {
+            // 计算得分
+            const scores = calculateScores();
+            
+            // 确定结果类型
+            const result = determineResultType(scores);
+            
+            // 更新UI
+            quizContainer.classList.add('hidden');
+            resultContainer.classList.remove('hidden');
+            animalImage.innerHTML = `<img src="${result.image}" alt="${result.type}">`;
+            resultTitle.textContent = result.title;
+            resultDescription.textContent = result.description;
+            
+            // 显示详细分数
+            scoreDetails.innerHTML = `
+                <div class="result-item">
+                    <strong>入世得分:</strong> ${scores.rawEngagement}/${scores.maxPossibleEngagement} (${Math.round(scores.engagementPercent)}%)
+                </div>
+                <div class="result-item">
+                    <strong>出世得分:</strong> ${scores.rawDetachment}/${scores.maxPossibleDetachment} (${Math.round(scores.detachmentPercent)}%)
+                </div>
+                <div class="result-item">
+                    <strong>类型:</strong> ${result.type}
+                </div>
+            `;
+            
+            // 生成分享二维码
+            generateQRCode();
+            
+            // 匿名保存数据
+            saveDataAnonymously(scores, result.type);
+        }
+        
+        // 生成二维码
+        function generateQRCode() {
+            // 由于无法直接在这里生成二维码，使用占位图像
+            qrCodeImage.innerHTML = `<img src="/api/placeholder/150/150" alt="分享二维码">`;
+            
+            // 注意：实际部署时需要使用二维码生成库如qrcode.js
+            // 下面是示例代码注释：
+            /*
+            const url = window.location.href;
+            const qr = new QRCode(qrCodeImage, {
+                text: url,
+                width: 150,
+                height: 150
+            });
+            */
+        }
+        
+        // 匿名保存数据
+        function saveDataAnonymously(scores, resultType) {
+            // 生成唯一ID，但不包含个人信息
+            const sessionId = generateRandomId();
+            
+            // 准备要保存的匿名数据
+            const anonymousData = {
+                sessionId: sessionId,
+                timestamp: new Date().toISOString(),
+                scores: {
+                    engagementPercent: scores.engagementPercent,
+                    detachmentPercent: scores.detachmentPercent
+                },
+                resultType: resultType
+            };
+            
+            // 实际部署时，可以使用以下代码将数据发送到服务器
+            // 这里仅作示例，不进行实际操作
+            console.log("Anonymous data to be saved:", anonymousData);
+            
+            // 示例代码注释：
+            /*
+            fetch('/api/save-results', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(anonymousData)
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log('Success:', data);
+            })
+            .catch((error) => {
+                console.error('Error:', error);
+            });
+            */
+        }
+        
+        // 生成随机ID
+        function generateRandomId() {
+            return Math.random().toString(36).substring(2, 15);
+        }
+        
+        // 重新开始测验
+        function restartQuiz() {
+            // 重置状态
+            currentQuestionIndex = 0;
+            answers = {};
+            
+            // 重置UI
+            resultContainer.classList.add('hidden');
+            quizContainer.classList.remove('hidden');
+            
+            // 显示第一题
+            showQuestion(currentQuestionIndex);
+            updateProgressBar();
+        }
+        
+        // 分享结果
+        function shareResult() {
+            // 实际部署时，可以使用Web Share API或复制链接到剪贴板
+            alert('复制链接或扫描二维码分享您的结果');
+            
+            // 示例代码注释：
+            /*
+            if (navigator.share) {
+                navigator.share({
+                    title: '我的目标追求心理测量结果',
+                    text: `我的测量结果是：${resultTitle.textContent}`,
+                    url: window.location.href
+                })
+                .then(() => console.log('成功分享'))
+                .catch((error) => console.log('分享失败', error));
+            } else {
+                // 复制到剪贴板
+                const shareUrl = window.location.href;
+                navigator.clipboard.writeText(shareUrl)
+                    .then(() => alert('链接已复制到剪贴板'))
+                    .catch(err => alert('复制失败: ' + err));
+            }
+            */
+        }
+    </script>
+</body>
+</html>

@@ -278,7 +278,7 @@
             <p>测量过程完全匿名。完成测量后，您将获得个性化的称号与形象。</p>
             <div class="instructions">
                 <p><strong>填写指南：</strong></p>
-                <p>这是一个7点量表，从“非常不同意”到“非常同意”。</p>
+                <p>这是一个7点量表，从"非常不同意"到"非常同意"。</p>
                 <p>长话短说，我们开始吧</p>
             </div>
             <button id="start-btn">开始测量</button>
@@ -620,7 +620,7 @@
             },
             {
                 type: "淡泊型追求者",
-                image: "/gray.png", // 灰色兔子图像
+                image: "gray.png", // 灰色兔子图像（注意修复了这里的斜杠）
                 title: "平静之兔",
                 description: "您在目标追求上既不强调入世的成就感，也不特别注重出世的放下，呈现出一种较为淡泊的特质。您可能不会为目标的实现或未实现而过度情绪化，保持着一种平和但略显疏离的态度。这种特质让您在面对生活各种挑战时都能保持一定的从容，但也可能使您错过一些通过积极追求或主动调整能带来的成长和满足。",
                 minEngage: 0,
@@ -860,12 +860,33 @@
                 </div>
             `;
             
+            // 生成二维码占位图
+            qrCodeImage.innerHTML = `<img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='150' height='150' viewBox='0 0 150 150'%3E%3Crect width='150' height='150' fill='%23f1f1f1'/%3E%3Ctext x='75' y='75' font-family='Arial' font-size='12' text-anchor='middle' dominant-baseline='middle'%3E二维码占位图%3C/text%3E%3C/svg%3E" alt="分享二维码">`;
+            
             // 匿名保存数据
             saveDataAnonymously(scores, result.type);
         }
-
+        
+        // 匿名保存数据
+        function saveDataAnonymously(scores, resultType) {
+            // 生成唯一ID，但不包含个人信息
+            const sessionId = generateRandomId();
             
-            // 示例代码注释：
+            // 准备要保存的匿名数据
+            const anonymousData = {
+                sessionId: sessionId,
+                timestamp: new Date().toISOString(),
+                scores: {
+                    engagementPercent: scores.engagementPercent,
+                    detachmentPercent: scores.detachmentPercent
+                },
+                resultType: resultType
+            };
+            
+            // 仅在控制台显示，实际部署时可以发送到服务器
+            console.log("匿名数据:", anonymousData);
+            
+            // 实际生产环境中，可以使用以下代码将数据发送到服务器
             /*
             fetch('/api/save-results', {
                 method: 'POST',
@@ -903,8 +924,12 @@
             showQuestion(currentQuestionIndex);
             updateProgressBar();
         }
+        
+        // 分享结果
+        function shareResult() {
+            alert('复制链接或扫描二维码分享您的结果');
             
-            // 示例代码注释：
+            // 实际生产环境中，可以使用Web Share API或复制链接到剪贴板
             /*
             if (navigator.share) {
                 navigator.share({
@@ -923,6 +948,3 @@
             }
             */
         }
-    </script>
-</body>
-</html>
